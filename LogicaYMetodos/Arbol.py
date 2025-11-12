@@ -1,0 +1,58 @@
+import Nodos
+
+
+class ArbolGeneral:
+    def __init__(self):
+        self.raiz = Nodos.Carpeta("Raiz")  # carpeta es la clase y Nodos la libreria
+
+    # si no se especifica a el padre, el padre sera la raiz
+    def agregarCarpeta(self, nombreCarpetaAgregar, padre=None):
+        carpetaAgregar = Nodos.Carpeta(nombreCarpetaAgregar, padre)
+        if carpetaAgregar.padre == None:
+            carpetaAgregar.padre = self.raiz
+        carpetaAgregar.padre.hijos.append(carpetaAgregar)
+
+    # si no se especifica a el padre, el padre sera la raiz
+    def agregarContraseña(self, sitioWeb, usuario, contraseña, padre=None):
+        contraseñaAgregar = Nodos.Contraseña(sitioWeb, usuario, contraseña, padre)
+        if contraseñaAgregar.padre == None:
+            contraseñaAgregar.padre = self.raiz
+        contraseñaAgregar.padre.hijos.append(contraseñaAgregar)
+
+    def mostrarHijos(self, carpetaRaiz=None):
+        if carpetaRaiz == None:
+            carpetaRaiz = self.raiz
+        for (
+            hijos
+        ) in carpetaRaiz.hijos:  # muestra a los hijos de la carpeta raiz que se le pase
+            # Para deferenciar cuales nodos son carpetas o contraseñas
+            if isinstance(hijos, Nodos.Carpeta):
+                print("Carpeta:", hijos.nombre)
+            else:
+                print("Contraseña:", hijos.nombre)  # hijos.nombre==hijos.sitioWeb
+
+    def eliminarCarpeta(self, carpetaEliminar):
+        while carpetaEliminar.hijos:
+            carpetaEliminar.hijos.pop()
+        padre = carpetaEliminar.padre
+        if padre:  # comprueba que tiene padre o que sea distinto de None
+            padre.hijos.remove(carpetaEliminar)
+
+    def eliminarContraseña(self, contraseñaEliminar):
+        padre = contraseñaEliminar.padre
+        if padre:  # por seguridad, para no eliminar a el nodo raiz
+            padre.hijos.remove(contraseñaEliminar)
+
+    def buscarNodo(self, nombreNodo):
+        def busquedaRecursiva(nodoActual):
+            if nodoActual.nombre == nombreNodo:  # condicion de parada
+                return nodoActual  # devuelve el nodo a la funcion que lo llamo
+            for (
+                hijos
+            ) in nodoActual.hijos:  # condicion de parada cuando ya no hay mas hijos
+                resultado = busquedaRecursiva(hijos)
+                if resultado:
+                    return resultado
+            return None
+
+        return busquedaRecursiva(self.raiz)
