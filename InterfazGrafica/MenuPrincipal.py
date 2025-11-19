@@ -13,6 +13,7 @@ icono_agregarCarpeta = tk.PhotoImage(file="InterfazGrafica/agregarCarpeta.png")
 icono_buscar = tk.PhotoImage(file="InterfazGrafica/buscar.png")
 icono_salir = tk.PhotoImage(file="InterfazGrafica/salida.png")
 
+
 ancho_ventana = 600
 alto_ventana = 800
 
@@ -24,9 +25,35 @@ ventana_principal.geometry(f"{ancho_ventana}x{alto_ventana}+{posicion_x}+{posici
 # barra de busqueda y botones
 marco = tk.Frame(ventana_principal)
 marco.config(relief="solid", bg="#2596be", width=600, height=80)
-boton_ingresarCarpeta = tk.Button(marco, image=icono_agregarCarpeta, compound="center")
+
+
+# abre una ventana secundaria para agregar contraseñas
+def abrirVentanaSecundariaContraseñas():
+    import InterfazGrafica.agregarDatosContraseña as ventana
+
+    ventana.abrir_ventana_contraseñas(ArbolDeCarpetasContraseñas, actualizarPantalla)
+
+
+# metodo para abrir una ventana secundaria para agregar carpetas
+def abrirVentanaSecundariaCarpeta():
+    import InterfazGrafica.agregarDatosCarpeta as ventana
+
+    ventana.abrir_ventana_carpeta(ArbolDeCarpetasContraseñas, actualizarPantalla)
+
+
+boton_ingresarCarpeta = tk.Button(
+    marco,
+    image=icono_agregarCarpeta,
+    compound="center",
+    command=abrirVentanaSecundariaCarpeta,
+)
+
 boton_ingresarContraseña = tk.Button(
-    marco, image=icono_agregarContraseña, compound="center"
+    marco,
+    image=icono_agregarContraseña,
+    compound="center",
+    # abre el archuvo agregarDatosContraseña
+    command=abrirVentanaSecundariaContraseñas,
 )
 boton_salir = tk.Button(marco, image=icono_salir, compound="center")
 boton_ParaBuscar = tk.Button(marco, image=icono_buscar, compound="center")
@@ -76,8 +103,17 @@ def mostrarCarpetasContraseñas(control):
 
 # objeto de tipo control
 ArbolDeCarpetasContraseñas = Main.Control()
-ArbolDeCarpetasContraseñas.main()
+# ArbolDeCarpetasContraseñas.main()
 mostrarCarpetasContraseñas(ArbolDeCarpetasContraseñas)
+
+
+# metodo para actualizar la ventana con nuevas contraseñas o carpetas
+def actualizarPantalla():
+    # recorre cada objeto que hay en marco_datos y despues los elimina
+    for bloques in marco_Datos.winfo_children():
+        bloques.destroy()
+    # muestra lo nuevo
+    mostrarCarpetasContraseñas(ArbolDeCarpetasContraseñas)
 
 
 marco_Datos.pack_propagate(False)
