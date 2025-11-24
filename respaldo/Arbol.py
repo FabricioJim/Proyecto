@@ -6,18 +6,17 @@ class ArbolGeneral:
 
     # si no se especifica a el padre, el padre sera la raiz
     def agregarCarpeta(self, nombreCarpetaAgregar, padre=None):
-        if padre is None:
-            padre = self.raiz
         carpetaAgregar = Nodos.Carpeta(nombreCarpetaAgregar, padre)
-        carpetaAgregar.padre = padre  # Asegurar padre
-
-        padre.hijos.append(carpetaAgregar)
+        if carpetaAgregar.padre == None:
+            carpetaAgregar.padre = self.raiz
+        carpetaAgregar.padre.hijos.append(carpetaAgregar)
 
     # si no se especifica a el padre, el padre sera la raiz
     def agregarContraseña(self, sitioWeb, usuario, contraseña, padre=None):
         contraseñaAgregar = Nodos.Contraseña(sitioWeb, usuario, contraseña, padre)
-        contraseñaAgregar.padre = padre
-        padre.hijos.append(contraseñaAgregar)
+        if contraseñaAgregar.padre == None:
+            contraseñaAgregar.padre = self.raiz
+        contraseñaAgregar.padre.hijos.append(contraseñaAgregar)
 
     def mostrarHijos(self, carpetaRaiz=None):
         if carpetaRaiz == None:

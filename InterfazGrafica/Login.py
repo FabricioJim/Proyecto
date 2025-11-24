@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import subprocess
+import os
 
 
 BG = "#1e1e1e"         
@@ -16,8 +17,16 @@ def hover_out(btn):
     btn["bg"] = BTN_BG
 
 def validar(win):
+
     usuario = win.entry_nombre.get().strip()
     contrasenia = win.entry_pass.get().strip()
+    ruta = os.path.join(os.path.dirname(__file__),("login.txt"))
+    with open(ruta,"r") as arch:
+        valor1 = arch.readline().strip()
+        valor2 = arch.readline().strip()
+    
+    print(valor1)
+    print(valor2)
 
     if not contrasenia:
         messagebox.showerror("Error", "Escriba su contraseña")
@@ -26,17 +35,17 @@ def validar(win):
         messagebox.showerror("Error", "Escriba su nombre")
         return
     
-    if usuario != "tonotos" or contrasenia != "huevos1":
+    if usuario != valor1 or contrasenia != valor2:
         messagebox.showerror("Error","El usuario o contrasenia es incorrecto")
         return
 
-    if usuario == "tonotos" and contrasenia == "huevos1":
+    if usuario == valor1 and contrasenia == valor2:
         win.destroy()
         subprocess.run(["python", "-m", "InterfazGrafica.MenuPrincipal"])
 
 def main():
     Principal = tk.Tk()
-    Principal.title("Login Moderno")
+    Principal.title("Login")
     Principal.geometry("320x450")
     Principal.configure(bg=BG)
     Principal.resizable(False, False)

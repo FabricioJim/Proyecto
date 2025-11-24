@@ -1,6 +1,6 @@
 import tkinter as tk
-
 from LogicaYMetodos import Main, Nodos
+from .mostrar import mostrar_datos
 
 ventana_principal = tk.Tk()
 ancho = ventana_principal.winfo_screenwidth()  # obtiene el ancho de la pantalla
@@ -69,10 +69,16 @@ boton_salir = tk.Button(
 boton_ParaBuscar = tk.Button(marco, image=icono_buscar, compound="center")
 
 text = tk.Entry(marco, relief="solid")
+# objeto de tipo control
+#hasta aca para evitarnos de broncas
+ArbolDeCarpetasContraseñas = Main.Control()
 
 
 # pad para el espacio entre widgets y ipad para el relleno de widgets
 text.pack(side="left", ipady=8, padx=(25, 25))
+#de este lado para evitarnos de broncas, asi le pasamos el texto y el arbol donde se estan aguardando las contrasenias
+boton_ParaBuscar = tk.Button(marco, image=icono_buscar, compound="center",command=lambda:mostrar_datos(text,ArbolDeCarpetasContraseñas))
+
 boton_ParaBuscar.pack(side="left", padx=(5, 10), ipadx=10, ipady=8)
 boton_salir.pack(side="left", padx=(35, 25), ipadx=10, ipady=8)
 boton_ingresarContraseña.pack(side="right", padx=(10, 25), ipadx=10, ipady=8)
@@ -98,7 +104,7 @@ boton_regresar.pack(expand=True, fill="both")
 
 # marco para mostrar la informacion de carpetas y contraseñas
 marco_Datos = tk.Frame(ventana_principal)
-marco_Datos.config(relief="solid", bg="#d596be", width=600, height=720)
+marco_Datos.config(relief="solid", bg="purple", width=600, height=720)
 
 
 # bloques para contraseñas y carpetas
