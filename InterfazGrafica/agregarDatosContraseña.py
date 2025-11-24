@@ -15,16 +15,7 @@ def abrir_ventana_contraseñas(ArbolDeCarpetasContraseñas, actualizarPantalla):
         usuarioObtenido = entrada2.get()
         contraseñaObtenido = entrada3.get()
 
-
-        #aguarda los datos en un mismo archivo con un separador para evitarnos de broncas, si se elimina un sitio se tiene que eliminar el separador
-        with open("Contraseñas.txt","a") as arch:
-            arch.write(nombreObtenido+"\n")
-            arch.write(usuarioObtenido+"\n")
-            arch.write(contraseñaObtenido+"\n")
-            arch.write("----------------------------------\n")
-
-
-        ArbolDeCarpetasContraseñas.arbol.agregarContraseña(
+        ArbolDeCarpetasContraseñas.agregarContraseña(
             nombreObtenido, usuarioObtenido, contraseñaObtenido
 
         )
@@ -101,10 +92,14 @@ def abrir_ventana_contraseñas(ArbolDeCarpetasContraseñas, actualizarPantalla):
         command=ventana_secundaria.destroy,
     )
     boton_continuar = tk.Button(
-        marco_botones, text="Continuar", command=guardarContraseña
+        marco_botones,
+        text="Guardar",
+        command=guardarContraseña,
+        bg="#c65353",
+        fg="white",
     )
-    boton_salir.pack(side="left", padx=(50, 10), ipadx=20, fill="y")
-    boton_continuar.pack(side="right", padx=(10, 50), ipadx=20, fill="y")
+    boton_salir.pack(side="left", padx=40, ipadx=20)
+    boton_continuar.pack(side="right", padx=40, ipadx=20)
 
     marco_botones.pack_propagate(False)
     marco_botones.pack(fill="both", pady=100)

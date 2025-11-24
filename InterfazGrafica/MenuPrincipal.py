@@ -41,6 +41,14 @@ def abrirVentanaSecundariaCarpeta():
     ventana.abrir_ventana_carpeta(ArbolDeCarpetasContraseñas, actualizarPantalla)
 
 
+def abrirVentanaMostrarContraseña(hijo):
+    import InterfazGrafica.mostrarDatosContraseña as ventana
+
+    ventana.mostrarDatosDeLaContraseña(
+        hijo, ArbolDeCarpetasContraseñas, actualizarPantalla
+    )
+
+
 boton_ingresarCarpeta = tk.Button(
     marco,
     image=icono_agregarCarpeta,
@@ -52,10 +60,13 @@ boton_ingresarContraseña = tk.Button(
     marco,
     image=icono_agregarContraseña,
     compound="center",
-    # abre el archuvo agregarDatosContraseña
+    # abre el archivo agregarDatosContraseña
     command=abrirVentanaSecundariaContraseñas,
 )
-boton_salir = tk.Button(marco, image=icono_salir, compound="center")
+boton_salir = tk.Button(
+    marco, image=icono_salir, compound="center", command=ventana_principal.destroy
+)
+boton_ParaBuscar = tk.Button(marco, image=icono_buscar, compound="center")
 
 text = tk.Entry(marco, relief="solid")
 # objeto de tipo control
@@ -73,7 +84,23 @@ boton_salir.pack(side="left", padx=(35, 25), ipadx=10, ipady=8)
 boton_ingresarContraseña.pack(side="right", padx=(10, 25), ipadx=10, ipady=8)
 boton_ingresarCarpeta.pack(side="right", padx=(10, 35), ipady=8, ipadx=10)
 marco.pack_propagate(False)
-marco.pack()
+
+# --- Marco del botón Regresar ---
+marco_regresar = tk.Frame(ventana_principal, width=600, height=80, bg="#d596be")
+marco_regresar.pack_propagate(False)
+
+
+def botonRegresar():
+    ArbolDeCarpetasContraseñas.regresarCarpeta()
+    actualizarPantalla()
+
+
+# botón REGRESAR con tamaño de bloque (80px)
+boton_regresar = tk.Button(
+    marco_regresar, text="⮌ Regresar", font=("Arial", 14), command=botonRegresar
+)
+boton_regresar.pack(expand=True, fill="both")
+
 
 # marco para mostrar la informacion de carpetas y contraseñas
 marco_Datos = tk.Frame(ventana_principal)
@@ -85,10 +112,22 @@ def crearBloques(hijo):
     bloque = tk.Frame(marco_Datos, width=550, height=80)
     if isinstance(hijo, Nodos.Carpeta):
         icono = icono_carpeta
+
+        # Metodo para mostrar la carpeta seleccionada
+        def accion():
+            # cambiar carpeta actual
+            ArbolDeCarpetasContraseñas.cambiarCarpetaActual(hijo)
+            actualizarPantalla()
+
     else:
         icono = icono_contraseña
 
-    boton = tk.Button(bloque, text=hijo.nombre, image=icono, compound="left")
+        def accion():
+            abrirVentanaMostrarContraseña(hijo)
+
+    boton = tk.Button(
+        bloque, text=hijo.nombre, image=icono, compound="left", command=accion
+    )
     boton.image = icono
     # expand permite expansion, fill ejecuta la expansion
     boton.pack(expand=True, fill="both")
@@ -99,26 +138,39 @@ def crearBloques(hijo):
 
 # metodo para mostrar carpetas y contraseñas
 def mostrarCarpetasContraseñas(control):
-    # control.arbol ya es el arbol general y accede a su metodo mostrar hijos
-    hijos = control.arbol.mostrarHijos()
+    # se manda a llamar al metodo de la clase control
+    hijos = control.obtenerHijos()
     for hijo in hijos:
         Boton1 = crearBloques(hijo)
         Boton1.pack(pady=(10, 5))
 
-#arriba esta el objeto para eviatarnos de broncas...
-#ArbolDeCarpetasContraseñas.main()
-mostrarCarpetasContraseñas(ArbolDeCarpetasContraseñas)
 
 # metodo para actualizar la ventana con nuevas contraseñas o carpetas
 def actualizarPantalla():
-    # recorre cada objeto que hay en marco_datos y despues los elimina
+    # --- Mostrar u ocultar el botón regresar ----
+    if ArbolDeCarpetasContraseñas.carpetaActual.padre is None:
+        marco_regresar.forget()  # Ocultar en la raíz
+    else:
+        marco_regresar.pack(before=marco_Datos, fill="x")  # Mostrar cuando NO es raíz
+
     for bloques in marco_Datos.winfo_children():
         bloques.destroy()
+
     # muestra lo nuevo
     mostrarCarpetasContraseñas(ArbolDeCarpetasContraseñas)
 
 
+# objeto de tipo control
+ArbolDeCarpetasContraseñas = Main.Control()
+
+marco.pack()
+marco_regresar.pack()  # botón regresar (luego se ocultará si es raíz)
 marco_Datos.pack_propagate(False)
 marco_Datos.pack()
+
+
+actualizarPantalla()
+
+
 ventana_principal.resizable(False, False)  # opion para que wayland no reescale
 ventana_principal.mainloop()
