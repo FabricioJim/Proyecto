@@ -1,5 +1,7 @@
 import tkinter as tk
+
 from LogicaYMetodos import Main, Nodos
+
 from .mostrar import mostrar_datos
 
 ventana_principal = tk.Tk()
@@ -12,6 +14,9 @@ icono_agregarContraseña = tk.PhotoImage(file="InterfazGrafica/agregarContraseñ
 icono_agregarCarpeta = tk.PhotoImage(file="InterfazGrafica/agregarCarpeta.png")
 icono_buscar = tk.PhotoImage(file="InterfazGrafica/buscar.png")
 icono_salir = tk.PhotoImage(file="InterfazGrafica/salida.png")
+
+# boton para eliminar carpeta
+menu_contextual = tk.Menu(ventana_principal, tearoff=0)
 
 
 ancho_ventana = 600
@@ -70,14 +75,22 @@ boton_ParaBuscar = tk.Button(marco, image=icono_buscar, compound="center")
 
 text = tk.Entry(marco, relief="solid")
 # objeto de tipo control
-#hasta aca para evitarnos de broncas
+# hasta aca para evitarnos de broncas
 ArbolDeCarpetasContraseñas = Main.Control()
+ArbolDeCarpetasContraseñas.arbol.cargar()
+
+ArbolDeCarpetasContraseñas.carpetaActual = ArbolDeCarpetasContraseñas.arbol.raiz
 
 
 # pad para el espacio entre widgets y ipad para el relleno de widgets
 text.pack(side="left", ipady=8, padx=(25, 25))
-#de este lado para evitarnos de broncas, asi le pasamos el texto y el arbol donde se estan aguardando las contrasenias
-boton_ParaBuscar = tk.Button(marco, image=icono_buscar, compound="center",command=lambda:mostrar_datos(text,ArbolDeCarpetasContraseñas))
+# de este lado para evitarnos de broncas, asi le pasamos el texto y el arbol donde se estan aguardando las contrasenias
+boton_ParaBuscar = tk.Button(
+    marco,
+    image=icono_buscar,
+    compound="center",
+    command=lambda: mostrar_datos(text, ArbolDeCarpetasContraseñas),
+)
 
 boton_ParaBuscar.pack(side="left", padx=(5, 10), ipadx=10, ipady=8)
 boton_salir.pack(side="left", padx=(35, 25), ipadx=10, ipady=8)
@@ -107,6 +120,11 @@ marco_Datos = tk.Frame(ventana_principal)
 marco_Datos.config(relief="solid", bg="purple", width=600, height=720)
 
 
+def eliminarCarpetaDesdeUI(carpeta):
+    ArbolDeCarpetasContraseñas.eliminarCarpeta(carpeta.nombre)
+    actualizarPantalla()
+
+
 # bloques para contraseñas y carpetas
 def crearBloques(hijo):
     bloque = tk.Frame(marco_Datos, width=550, height=80)
@@ -133,6 +151,23 @@ def crearBloques(hijo):
     boton.pack(expand=True, fill="both")
     bloque.pack_propagate(False)
 
+    # --------- MENÚ CONTEXTUAL SOLO PARA CARPETAS ----------
+    if isinstance(hijo, Nodos.Carpeta):
+        menu_carpeta = tk.Menu(ventana_principal, tearoff=0)
+        menu_carpeta.add_command(
+            label="Eliminar carpeta",
+            command=lambda: (
+                ArbolDeCarpetasContraseñas.eliminarCarpeta(hijo.nombre),
+                actualizarPantalla(),
+            ),
+        )
+
+        # Mostrar menú con clic derecho
+        def mostrar_menu(event):
+            menu_carpeta.tk_popup(event.x_root, event.y_root)
+
+        boton.bind("<Button-3>", mostrar_menu)
+    # -------------------------------------------------------
     return bloque
 
 
@@ -159,9 +194,6 @@ def actualizarPantalla():
     # muestra lo nuevo
     mostrarCarpetasContraseñas(ArbolDeCarpetasContraseñas)
 
-
-# objeto de tipo control
-ArbolDeCarpetasContraseñas = Main.Control()
 
 marco.pack()
 marco_regresar.pack()  # botón regresar (luego se ocultará si es raíz)

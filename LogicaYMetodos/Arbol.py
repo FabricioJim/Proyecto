@@ -1,4 +1,7 @@
+import json
+
 import LogicaYMetodos.Nodos as Nodos
+
 
 class ArbolGeneral:
     def __init__(self):
@@ -15,9 +18,10 @@ class ArbolGeneral:
 
     # si no se especifica a el padre, el padre sera la raiz
     def agregarContraseña(self, sitioWeb, usuario, contraseña, padre=None):
-        contraseñaAgregar = Nodos.Contraseña(sitioWeb, usuario, contraseña, padre)
-        contraseñaAgregar.padre = padre
-        padre.hijos.append(contraseñaAgregar)
+        if padre is None:
+            padre = self.raiz
+        nodo = Nodos.Contraseña(sitioWeb, usuario, contraseña, padre)
+        padre.hijos.append(nodo)
 
     def mostrarHijos(self, carpetaRaiz=None):
         if carpetaRaiz == None:
@@ -58,10 +62,27 @@ class ArbolGeneral:
 
         return busquedaRecursiva(self.raiz)
 
+    # Metodo para guardar en un json
+    def guardar(self, ruta="datos.json"):
+        with open(ruta, "w") as f:
+            json.dump(self.raiz.to_dict(), f, indent=4)
 
+    # carga al inicio de la aplicacion
+    def cargar(self, ruta="datos.json"):
+        try:
+            with open(ruta, "r") as f:
+                data = json.load(f)
+                self.raiz = self._construir_nodo(data, None)
+        except FileNotFoundError:
+            pass  # primera vez sin datos
 
-
-
-
-
-
+    # Contruye la jerarquia
+    def _construir_nodo(self, data, padre):
+        if data["tipo"] == "carpeta":
+            nodo = Nodos.Carpeta(data["nombre"], padre)
+            nodo.hijos = [self._construir_nodo(h, nodo) for h in data["hijos"]]
+            return nodo
+        else:
+            return Nodos.Contraseña(
+                data["nombre"], data["usuario"], data["contraseña"], padre
+            )

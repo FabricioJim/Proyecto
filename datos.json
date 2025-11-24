@@ -1,0 +1,60 @@
+{
+    "tipo": "carpeta",
+    "nombre": "Raiz",
+    "hijos": [
+        {
+            "tipo": "contrase\u00f1a",
+            "nombre": "Facebook",
+            "usuario": "YO",
+            "contrase\u00f1a": "12345"
+        },
+        {
+            "tipo": "contrase\u00f1a",
+            "nombre": "Twiter",
+            "usuario": "EVE12",
+            "contrase\u00f1a": "..12345"
+        },
+        {
+            "tipo": "carpeta",
+            "nombre": "Bancos",
+            "hijos": [
+                {
+                    "tipo": "contrase\u00f1a",
+                    "nombre": "Bancoppel",
+                    "usuario": "fab",
+                    "contrase\u00f1a": "12345%"
+                },
+                {
+                    "tipo": "contrase\u00f1a",
+                    "nombre": "BBVA",
+                    "usuario": "Fab",
+                    "contrase\u00f1a": "123##//?"
+                }
+            ]
+        },
+        {
+            "tipo": "carpeta",
+            "nombre": "LOL",
+            "hijos": [
+                {
+                    "tipo": "contrase\u00f1a",
+                    "nombre": "Cuenta 1",
+                    "usuario": "bicho",
+                    "contrase\u00f1a": "____-----[[[[{{{{"
+                },
+                {
+                    "tipo": "carpeta",
+                    "nombre": "Lolcito",
+                    "hijos": [
+                        {
+                            "tipo": "contrase\u00f1a",
+                            "nombre": "Multicuenta1",
+                            "usuario": "YO",
+                            "contrase\u00f1a": "\"\"\"&&/===||\u00b0\u00b0"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -17,7 +17,6 @@ def abrir_ventana_contraseñas(ArbolDeCarpetasContraseñas, actualizarPantalla):
 
         ArbolDeCarpetasContraseñas.agregarContraseña(
             nombreObtenido, usuarioObtenido, contraseñaObtenido
-
         )
         actualizarPantalla()
         ventana_secundaria.destroy()

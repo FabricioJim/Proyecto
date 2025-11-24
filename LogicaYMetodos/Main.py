@@ -9,11 +9,15 @@ class Control:
     # Manejo de carpetas y contraseñas
     def agregarCarpeta(self, nombre):
         self.arbol.agregarCarpeta(nombre, padre=self.carpetaActual)
+        # para guardar en .json
+        self.arbol.guardar()
 
     def agregarContraseña(self, sitio, usuario, contraseña):
         self.arbol.agregarContraseña(
             sitio, usuario, contraseña, padre=self.carpetaActual
         )
+        # para guardar en .json
+        self.arbol.guardar()
 
     # --- Navegación ---
     def cambiarCarpetaActual(self, carpeta):
@@ -31,13 +35,17 @@ class Control:
         nodo = self.buscar(nombre)
         if isinstance(nodo, Nodos.Carpeta):
             self.arbol.eliminarCarpeta(nodo)
+        self.arbol.guardar()
 
     def eliminarContraseña(self, nombre, padre):
         # padre es la carpeta actual
         for hijo in padre.hijos:
             if isinstance(hijo, Nodos.Contraseña) and hijo.nombre == nombre:
                 padre.hijos.remove(hijo)
+                self.arbol.guardar()
+
                 return True
+        self.arbol.guardar()
         return False
 
     # ---Regresar a la carpeta anterior-----
