@@ -13,6 +13,11 @@ def abrir_ventana_carpeta(ArbolDeCarpetasContraseñas, actualizarPantalla):
     def guardarCarpeta():
         nombreObtenido = entrada1.get()
 
+        #lo mismito si se elimina una carpeta del archivo se tiene que eliminar junto con la linea de separacion
+        with open("carpeta.txt","a") as arch:
+            arch.write(nombreObtenido+"\n")
+            arch.write("-------------------------------\n")
+
         ArbolDeCarpetasContraseñas.arbol.agregarCarpeta(nombreObtenido)
         actualizarPantalla()
         ventana_secundaria.destroy()
